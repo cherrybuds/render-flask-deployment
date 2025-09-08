@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shop – The Cherry Bud Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    .page-wrap { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      position: relative;
+      height: 360px;
+      border: 3px solid #ff89c2;
+      border-radius: 16px;
+      box-shadow: 0 0 15px #ff89c2;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 22px #ff89c2;
+      border-color: #ff9ad0;
+    }
+    .card-overlay {
+      background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,.75) 100%);
+      padding: 14px;
+    }
+    .title { color: #ff89c2; font-weight: 800; font-size: 1.05rem; margin: 0 0 4px; }
+    .price { color: #fff; opacity: .95; margin: 0 0 10px; }
 
+    .btn {
+      padding: 8px 12px;
+      background: transparent;
+      color: #ff89c2;
+      border: 2px solid #ff89c2;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .card-actions { display: flex; gap: 10px; }
+    /* Fallback “no image” look */
+    .no-image {
+      background: repeating-linear-gradient(
+        45deg, #1a1a1a, #1a1a1a 10px, #222 10px, #222 20px
+      );
+      display: grid; place-items: center;
+      color: #bbb; text-align: center; padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="circle">
+      <a href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo"></a>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="lock-icon">
+      <img src="{{ url_for('static', filename='lock.png') }}" alt="Lock" />
+    </a>
+    <div class="nav-center">
+      <h1>
+        <span class="rotate-text">
+          <span>Keeping it Fresh</span>
+          <span>Standing on Culture</span>
+          <span>Sensational</span>
+          <span>The Cherry Bud Company</span>
+        </span>
+      </h1>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <h2 style="text-align:center; color:#ff89c2; margin: 0 0 18px;">Shop</h2>
+
+    {% if not shop_items %}
+      <p style="text-align:center; color:#ccc;">No items available yet.</p>
+    {% else %}
+      <div class="grid">
+        {% for item in shop_items %}
+          {% if item.has_image %}
+            {% set bg = url_for('item_image', item_id=item.id) %}
+          {% else %}
+            {% set bg = None %}
+          {% endif %}
+
+          <div class="card" style="{{ 'background-image:url(' ~ bg ~ ');' if bg else '' }}">
+            {% if not bg %}
+              <div class="no-image">No Image</div>
+            {% endif %}
+
+            <div class="card-overlay">
+              <div class="title">{{ item.item_name }}</div>
+              <div class="price">{{ item.item_price }}</div>
+              <div class="card-actions">
+                <a class="btn" href="{{ url_for('view_item', item_id=item.id) }}">View</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-center-text">
+      <p>
+        Produced By The Cherry Bud Company<br>
+        Communications@thecherrybudcompany.com
+      </p>
+    </div>
+    <div class="footer-icons">
+      <a href="https://www.instagram.com/thecherrybudco/?hl=en" target="_blank">
+        <img src="{{ url_for('static', filename='insta.png') }}" alt="@thecherrybudco">
+      </a>
+      <a href="https://www.tiktok.com/@cherry.buds_co" target="_blank">
+        <img src="{{ url_for('static', filename='tiktok.webp') }}" alt="@cherry.buds_co">
+      </a>
+      <a href="https://www.youtube.com/@CherryBudCO" target="_blank" style="margin-top:-10%; margin-left:-13%;">
+        <img src="{{ url_for('static', filename='youtube.png') }}" style="height:70px;" alt="@CherryBudCO">
+      </a>
+    </div>
+    <a href="/" class="footer-return-button">Return</a>
+  </footer>
+</body>
+</html>
