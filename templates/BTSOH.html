@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Cherry Bud Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="circle">
+      <a href="/">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </a>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="lock-icon">
+      <img src="{{ url_for('static', filename='lock.png') }}" alt="Lock" />
+    </a>
+    <div class="nav-center">
+      <h1>
+        <span class="rotate-text">
+          <span>Keeping it Fresh</span>
+          <span>Standing on Culture</span>
+          <span>Sensational</span>
+          <span>The Cherry Bud Company</span>
+        </span>
+      </h1>
+    </div>
+  </header>
+
+  <!-- Financial Breakdown -->
+  <section style="max-width:1100px; margin:30px auto 10px; padding:0 16px;">
+    <h2 style="text-align:center; color:#ff89c2; margin-bottom:16px;">Financial Overview</h2>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+      <!-- Gross Income -->
+      <div style="background:#1a1a1a; border:3px solid #ff89c2; border-radius:12px; box-shadow:0 0 15px #ff89c2; padding:16px;">
+        <div style="font-size:0.9rem; color:#ccc; margin-bottom:6px;">Gross Income</div>
+        <div style="font-size:1.8rem; color:#ff89c2; font-weight:800;">
+          ${{ '%.2f'|format(total_income or 0) }}
+        </div>
+      </div>
+
+      <!-- Total Expenses -->
+      <div style="background:#1a1a1a; border:3px solid #ff89c2; border-radius:12px; box-shadow:0 0 15px #ff89c2; padding:16px;">
+        <div style="font-size:0.9rem; color:#ccc; margin-bottom:6px;">Total Expenses</div>
+        <div style="font-size:1.8rem; color:#ff89c2; font-weight:800;">
+          ${{ '%.2f'|format(total_expenses or 0) }}
+        </div>
+      </div>
+
+      <!-- Net -->
+      <div style="background:#1a1a1a; border:3px solid #ff89c2; border-radius:12px; box-shadow:0 0 15px #ff89c2; padding:16px;">
+        <div style="font-size:0.9rem; color:#ccc; margin-bottom:6px;">Net (Income − Expenses)</div>
+        <div style="font-size:1.8rem; font-weight:800;
+                    color: {{ '#6bff8e' if (net or 0) >= 0 else '#ff6b6b' }};">
+          ${{ '%.2f'|format(net or 0) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Breakdown by Person -->
+    {% if expense_breakdown %}
+    <div style="margin-top:20px; background:#1a1a1a; border:3px solid #ff89c2; border-radius:12px; padding:16px; box-shadow:0 0 15px #ff89c2;">
+      <h3 style="color:#ff89c2; margin-bottom:10px;">Spending by Person</h3>
+      <ul style="list-style:none; padding-left:0; margin:0; color:#fff; font-size:1rem;">
+        {% for person, total in expense_breakdown.items() %}
+          <li style="margin-bottom:6px;">{{ person }} spent ${{ '%.2f'|format(total) }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- Expense Form -->
+  <h1 style="text-align:center; margin-top:40px;">Add an Expense</h1>
+  <form action="{{ url_for('submit') }}" method="post">
+    <label>Date:</label><br>
+    <input type="date" name="date" required><br><br>
+
+    <label>Cost:</label><br>
+    <input type="number" name="cost" step="0.01" required><br><br>
+
+    <label>Store Name:</label><br>
+    <input type="text" name="store_name" required><br><br>
+
+    <label>Description:</label><br>
+    <input type="text" name="item_description"><br><br>
+
+    <label>Purchased By:</label><br>
+    <input type="text" name="purchased_by" required><br><br>
+
+    <input type="submit" value="Add Expense">
+  </form>
+
+  <!-- Expense Table -->
+  <table class="the-table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Cost</th>
+        <th>Store</th>
+        <th>Description</th>
+        <th>Purchased By</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in expenses %}
+      <tr>
+        <td>{{ row['id'] }}</td>
+        <td>{{ row['date'] }}</td>
+        <td>{{ row['cost'] }}</td>
+        <td>{{ row['store_name'] }}</td>
+        <td>{{ row['item_description'] }}</td>
+        <td>{{ row['purchased_by'] }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('delete_expense', expense_id=row['id']) }}">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align:center; color:#888;">No expenses yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Gross Income -->
+  <h2 style="text-align:center; color:#ff89c2; margin-top:60px;">Gross Income</h2>
+
+  <!-- Add Income Form -->
+  <form action="{{ url_for('add_income') }}" method="POST"
+        style="max-width:700px; margin:auto; background:#1a1a1a; padding:20px; border-radius:10px; border:3px solid #ff89c2; box-shadow:0 0 15px #ff89c2;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+      <div>
+        <label for="income_date">Date</label><br>
+        <input type="date" id="income_date" name="income_date" required
+               style="width:100%; padding:10px; margin-top:5px; background:#111; border:2px solid #ff89c2; border-radius:6px; color:#fff;">
+      </div>
+      <div>
+        <label for="income_amount">Amount</label><br>
+        <input type="number" step="0.01" id="income_amount" name="income_amount" required
+               style="width:100%; padding:10px; margin-top:5px; background:#111; border:2px solid #ff89c2; border-radius:6px; color:#fff;">
+      </div>
+    </div>
+
+    <label for="income_source" style="display:block; margin-top:12px;">Source</label>
+    <input type="text" id="income_source" name="income_source" required
+           style="width:100%; padding:10px; margin-top:5px; background:#111; border:2px solid #ff89c2; border-radius:6px; color:#fff;">
+
+    <label for="income_notes" style="display:block; margin-top:12px;">Notes (optional)</label>
+    <input type="text" id="income_notes" name="income_notes"
+           style="width:100%; padding:10px; margin-top:5px; background:#111; border:2px solid #ff89c2; border-radius:6px; color:#fff;">
+
+    <button type="submit"
+            style="margin-top:16px; padding:10px 15px; background:transparent; border:2px solid #ff89c2; color:#ff89c2; border-radius:8px; cursor:pointer;">
+      Add Income
+    </button>
+  </form>
+
+  <!-- Income Total -->
+  <p style="text-align:center; margin-top:16px; color:#ccc;">
+    Total Gross Income: <span style="color:#ff89c2; font-weight:700;">${{ '%.2f'|format(total_income or 0) }}</span>
+  </p>
+
+  <!-- Income Table -->
+  <table class="the-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Source</th>
+        <th>Amount</th>
+        <th>Notes</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inc in incomes %}
+      <tr>
+        <td>{{ inc.id }}</td>
+        <td>{{ inc.date }}</td>
+        <td>{{ inc.source }}</td>
+        <td>${{ '%.2f'|format(inc.amount) }}</td>
+        <td>{{ inc.notes }}</td>
+        <td>
+          <form action="{{ url_for('delete_income', income_id=inc.id) }}" method="POST" style="display:inline;">
+            <input type="submit" value="Delete"
+                   style="background-color:#ff1e80; color:white; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer;">
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center; color:#888;">No income records yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Contact Submissions -->
+  <h2 style="text-align:center; color:#ff89c2; margin-top:60px;">Contact Submissions</h2>
+  <table class="the-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for contact in contacts %}
+      <tr>
+        <td>{{ contact.name }}</td>
+        <td>{{ contact.email }}</td>
+        <td>{{ contact.message }}</td>
+        <td>
+          <form action="{{ url_for('delete_contact', contact_id=contact.id) }}" method="POST" style="display:inline;">
+            <input type="submit" value="Delete"
+                   style="background-color:#ff1e80; color:white; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer;">
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center; color:#888;">No contacts yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Add Shop Item -->
+  <h1 style="text-align:center; margin-top:60px; color:#ff89c2;">Add Shop Item</h1>
+  <form action="{{ url_for('add_item') }}" method="POST" enctype="multipart/form-data"
+        style="max-width:500px; margin:auto; background-color:#1a1a1a; padding:20px; border-radius:10px; border:3px solid #ff89c2; box-shadow:0 0 15px #ff89c2;">
+    <label for="item_name">Item Name:</label><br>
+    <input type="text" id="item_name" name="item_name" required
+           style="width:100%; padding:10px; margin-top:5px; background-color:#111; border:2px solid #ff89c2; border-radius:5px; color:white;"><br><br>
+
+    <label for="item_price">Price:</label><br>
+    <input type="text" id="item_price" name="item_price" required
+           style="width:100%; padding:10px; margin-top:5px; background-color:#111; border:2px solid #ff89c2; border-radius:5px; color:white;"><br><br>
+
+    <label for="item_description">Description:</label><br>
+    <textarea id="item_description" name="item_description" rows="4" required
+              style="width:100%; padding:10px; margin-top:5px; background-color:#111; border:2px solid #ff89c2; border-radius:5px; color:white;"></textarea><br><br>
+
+    <label for="item_pictures">Upload Picture:</label><br>
+    <input type="file" id="item_pictures" name="item_pictures" accept="image/*" multiple required
+              style="margin-top:5px; color:white;">
+
+    <button type="submit" style="padding:10px 15px; background-color:transparent; border:2px solid #ff89c2; color:#ff89c2; border-radius:5px; cursor:pointer;">
+      Save Item
+    </button>
+  </form>
+
+  <!-- Shop Items Table -->
+  <h2 style="text-align:center; color:#ff89c2; margin-top:60px;">Shop Items</h2>
+  <table class="the-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Preview</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in shop_items %}
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>
+          {% if item.has_image %}
+            <img src="{{ url_for('item_image', item_id=item.id) }}" alt="img {{ item.id }}" style="height:60px; border-radius:6px;">
+          {% else %}
+            <span style="color:#888;">No Image</span>
+          {% endif %}
+        </td>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.item_price }}</td>
+        <td style="max-width:420px; overflow-wrap:anywhere;">{{ item.item_description }}</td>
+        <td>
+          <form action="{{ url_for('delete_item', item_id=item.id) }}" method="POST" style="display:inline;">
+            <input type="submit" value="Delete"
+                   style="background-color:#ff1e80; color:white; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer;">
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center; color:#888;">No shop items yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 style="text-align:center; color:#ff89c2; margin-top:60px;">Orders</h2>
+
+<table class="the-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date (UTC)</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Total</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in orders %}
+    <tr>
+      <td>{{ o.id }}</td>
+      <td>{{ o.created_at }}</td>
+      <td>{{ o.customer_email or '-' }}</td>
+      <td>{{ o.status }}</td>
+      <td>${{ '%.2f'|format((o.total_cents or 0) / 100) }}</td>
+      <td>
+        <button type="button"
+                onclick="toggleOrderItems('{{ o.id }}')"
+                style="padding:6px 10px; background:transparent; border:2px solid #ff89c2; color:#ff89c2; border-radius:8px; cursor:pointer;">
+          View Items
+        </button>
+      </td>
+    </tr>
+    <tr id="order-items-{{ o.id }}" style="display:none; background:#151515;">
+      <td colspan="6">
+        {% set items = order_items.get(o.id, []) %}
+        {% if items %}
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:8px; border-bottom:1px solid #333;">Item</th>
+                <th style="text-align:left; padding:8px; border-bottom:1px solid #333;">Unit</th>
+                <th style="text-align:left; padding:8px; border-bottom:1px solid #333;">Qty</th>
+                <th style="text-align:right; padding:8px; border-bottom:1px solid #333;">Line Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for it in items %}
+              <tr>
+                <td style="padding:8px;">{{ it.item_name }}</td>
+                <td style="padding:8px;">${{ '%.2f'|format((it.unit_amount_cents or 0)/100) }}</td>
+                <td style="padding:8px;">{{ it.quantity }}</td>
+                <td style="padding:8px; text-align:right;">
+                  ${{ '%.2f'|format(((it.unit_amount_cents or 0) * (it.quantity or 0))/100) }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="color:#aaa;">No items recorded for this order.</div>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6" style="text-align:center; color:#888;">No orders yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  function toggleOrderItems(id) {
+    const row = document.getElementById('order-items-' + id);
+    if (!row) return;
+    row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'table-row' : 'none';
+  }
+</script>
+
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-center-text">
+      <p>
+        Produced By The Cherry Bud Company<br>
+        Communications@thecherrybudcompany.com
+      </p>
+    </div>
+    <div class="footer-icons">
+      <a href="https://www.instagram.com/thecherrybudco/?hl=en" target="_blank">
+        <img src="{{ url_for('static', filename='insta.png') }}" alt="@thecherrybudco">
+      </a>
+      <a href="https://www.tiktok.com/@cherry.buds_co" target="_blank">
+        <img src="{{ url_for('static', filename='tiktok.webp') }}" alt="@cherry.buds_co">
+      </a>
+      <a href="https://www.youtube.com/@CherryBudCO" target="_blank" style="margin-top:-10%; margin-left:-13%;">
+        <img src="{{ url_for('static', filename='youtube.png') }}" style="height:70px;" alt="@CherryBudCO">
+      </a>
+    </div>
+    <a href="/" class="footer-return-button">Return</a>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,361 @@
+/* Reset & basics */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #111;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  background-color: #222;
+  padding: 0 20px;
+  position: relative;
+}
+
+.nav-center {
+  text-align: center;
+  width: 100%;
+  color: white;
+}
+
+.logo {
+  height: 75px;
+  margin-left: 9px;
+  margin-top: 5px;
+}
+
+.circle { 
+   width: 85px;
+   height: 85px;
+   border-radius: 25px;
+   background: #888; 
+}
+
+.lock-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 999;
+}
+
+.lock-icon img {
+  height: 40px;
+  width: auto;
+  max-height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.lock-icon:hover img {
+  transform: scale(1.1);
+}
+
+/* Main Section */
+.main-content {
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.rotate-text {
+  display: inline-block;
+  height: 1.2em;
+  overflow: hidden;
+  vertical-align: top;
+  position: relative;
+  text-align: center;
+  color: #fff9fc;
+}
+
+.rotate-text span {
+  display: block;
+  animation: rotate 8s infinite;
+}
+
+@keyframes rotate {
+  0%, 10%     { transform: translateY(0%); }
+  25%, 35%    { transform: translateY(-100%); }
+  50%, 60%    { transform: translateY(-200%); }
+  75%, 85%    { transform: translateY(-300%); }
+  100%        { transform: translateY(-400%); }
+}
+
+/* IMAGE SECTION */
+.image-section {
+  display: flex;
+  height: 80vh;
+  transition: all 1s ease;
+}
+
+
+.image-link {
+  flex: 1;
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  transition: flex 1s ease, filter 1s ease;
+
+}
+
+.image-link:hover {
+  flex: 3;
+  z-index: 2;
+}
+
+
+.image-box {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transition: all 1s ease;
+  cursor: pointer;
+  transition: flex 1s ease;
+}
+
+.image-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 0 10px black;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+
+.image-box:hover .image-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+.image-section:hover .image-box:not(:hover) .image-text {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.image-box:hover {
+  flex: 2;
+  z-index: 0.5;
+}
+
+.image-box:hover img {
+  transform: scale(1.1);
+}
+
+
+
+.image-section:hover .image-link:not(:hover) {
+  flex: 1;
+  filter: grayscale(100%) brightness(60%);
+  transition: flex 1s ease, filter 1s ease;
+}
+
+/* Footer */
+.site-footer {
+  background-color: #222;
+  color: white;
+  height: 100px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.footer-center-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer-icons {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.footer-icons img {
+  height: 35px;
+  width: auto;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.youtube-icon {
+  height: 100px; /* different from the others */
+  width: auto;
+}
+
+.footer-icons a:hover img {
+  transform: scale(1.1);
+  filter: brightness(1.5);
+}
+
+
+/* Table & Form Styling */
+.the-table {
+  width: 90%;
+  margin: 60px auto;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(255, 0, 120, 0.2);
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.the-table th,
+.the-table td {
+  padding: 16px;
+  text-align: center;
+}
+
+.the-table thead {
+  background-color: #222;
+  color: #ff89c2;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 2px solid #ff1e80;
+}
+
+.the-table tbody tr:nth-child(even) {
+  background-color: #1c1c1c;
+}
+
+.the-table tbody tr:nth-child(odd) {
+  background-color: #2a2a2a;
+}
+
+.the-table tbody tr:hover {
+  background-color: #333;
+  transition: background-color 0.2s ease;
+}
+
+form {
+  background-color: #1a1a1a;
+  padding: 30px;
+  max-width: 500px;
+  margin: 40px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255, 0, 120, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  font-weight: bold;
+  color: #ff89c2;
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="date"],
+form input[type="number"] {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  font-size: 1em;
+}
+
+form input[type="submit"] {
+  background-color: #ff1e80;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form input[type="submit"]:hover {
+  background-color: #ff4fa0;
+  transform: scale(1.02);
+}
+
+.footer-return-button {
+  position: absolute;
+  right: 40px;
+  top: 30%;
+  transform: translateY(-0%);
+  background-color: #d20005;
+  color: white;
+  padding: 20px 35px;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2em;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 0, 120, 0.3);
+}
+
+.footer-return-button:hover {
+  background-color: #ff4fa0;
+  transform: scale(1.15);
+  box-shadow: 0 0 15px rgba(255, 0, 120, 0.6);
+}
+
+.shop_section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* responsive grid */
+  gap: 20px;
+  padding: 40px;
+  justify-items: center; /* centers items horizontally */
+  align-items: center;   /* centers items vertically */
+}
+
+.shop_item {
+  border: 3px solid #ff89c2; /* same as return button border */
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #111; /* optional: for contrast */
+  width: 50vw;
+  height: 50vh; /* or auto, depending on layout */
+  box-shadow: 0 0 10px #ff89c2;
+  border-radius: 10px;
+}
+
+.shop_item img {
+  max-height: 200px;
+  object-fit: contain;
+}

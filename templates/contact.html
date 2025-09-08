@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us - Cherry Bud Co.</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style=" background-image: url('path/to/IMG_4729.JPEG'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+
+    
+
+<header class="navbar">
+    <div class = "circle">
+      <a href="/">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </a>
+    </div>
+    <div class="nav-center">
+        <h1>Contact Us</h1>
+    </div>
+</header>
+
+<main>
+    <form action="{{ url_for('contact') }}" method="POST">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <input type="submit" value="Send Message">
+    </form>
+
+    {% if success %}
+        <p style="text-align: center; color: lime;">Message sent successfully!</p>
+    {% endif %}
+</main>
+
+<footer class="site-footer">
+    <div class="footer-center-text">
+        <p>Produced by The Cherry Bud Company<br>communications@thecherrybudcompany.com</p>
+    </div>
+    <a href="/" class="footer-return-button">Return</a>
+</footer>
+
+</body>
+</html>

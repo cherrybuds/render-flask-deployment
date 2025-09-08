@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Cart – The Cherry Bud Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    .page-wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .panel {
+      background: #1a1a1a;
+      border: 3px solid #ff89c2;
+      border-radius: 16px;
+      box-shadow: 0 0 15px #ff89c2;
+      padding: 16px;
+    }
+    .btn {
+      padding: 10px 16px; background: transparent; color: #ff89c2;
+      border: 2px solid #ff89c2; border-radius: 10px; cursor: pointer; font-weight: 700;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn-danger { border-color: #ff1e80; color: #ff1e80; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .subtotal { font-size: 1.6rem; font-weight: 800; color: #ff89c2; }
+    .qty-input {
+      width: 80px; padding: 6px; background: #111; color: #fff;
+      border: 2px solid #ff89c2; border-radius: 8px; text-align: center;
+    }
+    .table-wrap { overflow-x: auto; }
+    .the-table td, .the-table th { vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="circle">
+      <a href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo"></a>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="lock-icon">
+      <img src="{{ url_for('static', filename='lock.png') }}" alt="Lock" />
+    </a>
+    <div class="nav-center">
+      <h1>
+        <span class="rotate-text">
+          <span>Keeping it Fresh</span>
+          <span>Standing on Culture</span>
+          <span>Sensational</span>
+          <span>The Cherry Bud Company</span>
+        </span>
+      </h1>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="panel">
+      <h2 style="text-align:center; color:#ff89c2; margin:0 0 16px;">Your Cart</h2>
+
+      {% if not items %}
+        <p style="text-align:center; color:#ccc; margin: 16px 0 12px;">Your cart is empty.</p>
+        <div style="text-align:center;">
+          <a class="btn" href="{{ url_for('shop') }}">← Back to Shop</a>
+        </div>
+      {% else %}
+        <form action="{{ url_for('update_cart') }}" method="POST">
+          <div class="table-wrap">
+            <table class="the-table" style="min-width:680px;">
+              <thead>
+                <tr>
+                  <th style="text-align:left;">Item</th>
+                  <th style="text-align:left;">Unit</th>
+                  <th style="text-align:left;">Qty</th>
+                  <th style="text-align:right;">Line Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for it in items %}
+                <tr>
+                  <td>{{ it.name }} <small style="opacity:.8;">({{ it.size }})</small></td>
+                  <td>${{ '%.2f'|format(it.unit_cents / 100) }}</td>
+                  <td>
+                    <input class="qty-input" type="number" name="qty_{{ it.id }}_{{ it.size }}" min="0" value="{{ it.qty }}">
+                  </td>
+                  <td style="text-align:right;">
+                    ${{ '%.2f'|format(it.line_total_cents / 100) }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:16px; flex-wrap:wrap;">
+            <div class="subtotal">Subtotal: ${{ '%.2f'|format(subtotal / 100) }}</div>
+
+            <div class="btn-row">
+              <button type="submit" class="btn">Update Cart</button>
+
+              <form action="{{ url_for('clear_cart') }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Clear Cart</button>
+              </form>
+
+              <a class="btn" href="{{ url_for('shop') }}">Continue Shopping</a>
+
+              <form action="{{ url_for('create_checkout_session') }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn">Checkout</button>
+              </form>
+            </div>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-center-text">
+      <p>
+        Produced By The Cherry Bud Company<br>
+        Communications@thecherrybudcompany.com
+      </p>
+    </div>
+    <div class="footer-icons">
+      <a href="https://www.instagram.com/thecherrybudco/?hl=en" target="_blank">
+        <img src="{{ url_for('static', filename='insta.png') }}" alt="@thecherrybudco">
+      </a>
+      <a href="https://www.tiktok.com/@cherry.buds_co" target="_blank">
+        <img src="{{ url_for('static', filename='tiktok.webp') }}" alt="@cherry.buds_co">
+      </a>
+      <a href="https://www.youtube.com/@CherryBudCO" target="_blank" style="margin-top:-10%; margin-left:-13%;">
+        <img src="{{ url_for('static', filename='youtube.png') }}" style="height:70px;" alt="@CherryBudCO">
+      </a>
+    </div>
+    <a href="/" class="footer-return-button">Return</a>
+  </footer>
+</body>
+</html>

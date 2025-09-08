@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang= "en">
+
+<head>
+<title> The Cherry Bud Company </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+
+<body>
+    <!-- LOCK ICON (linked) -->
+  
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class = "circle">
+      <a href="/">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </a>
+    </div>
+    <a href="/login" class="lock-icon" target="_blank">
+    <img src="{{url_for('static', filename='lock.png')}}" alt="Lock" />
+    </a>
+    <div class="nav-center">
+        <h1>
+        <span class="rotate-text">
+            <span>Keeping it Fresh</span>
+            <span>Standing on Culture</span>
+            <span>Sensational</span>
+            <span> The Cherry Bud Company</span>
+            <span> Keeping it Fresh</span>
+        </span>
+        </h1>
+    </div>
+  </header>
+
+
+
+  <!-- IMAGE SECTION -->
+  <section class="image-section">
+    <a href="{{ url_for('shop') }}" class="image-link">
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='IMG_0137.jpg') }}" alt="img1">
+            <div class="image-text">Shop</div>
+        </div>
+    </a>
+
+    <a href=" {{ url_for('contact') }}" class="image-link">
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='IMG_0102.jpg') }}" alt="img1" style="transform: scale(1.5);">
+            <div class="image-text">Contact Us <br>Or<br> Custom Order</div>
+        </div>
+    </a>
+
+    <a href="{{ url_for('Opening_Soon') }}" class="image-link">
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='IMG_0205.jpg') }}" alt="img1">
+            <div class="image-text">The Culture</div>
+        </div>
+    </a>
+
+  </section>
+</body>
+
+<footer class="site-footer">
+  <div class="footer-center-text">
+    <p>Produced By The Cherry Bud Company <br> Communications@thecherrybudcompany.com</p>
+  </div>
+
+  <div class="footer-icons">
+    <a href="https://www.instagram.com/thecherrybudco/?hl=en" target="_blank"><img src="{{ url_for('static', filename='insta.png') }}" alt="@thecherrybudco"></a>
+    <a href="https://www.tiktok.com/@cherry.buds_co" target="_blank"><img src="{{ url_for('static', filename='tiktok.webp') }}" alt="@cherry.buds_co"></a>
+    <a href="https://www.youtube.com/@CherryBudCO" target="_blank" style="margin-top: -10%; margin-left: -13%;"><img src="{{ url_for('static', filename='youtube.png') }}" style="height:70px;  "  alt ="@CherryBudCO" ></a>
+  </div>
+  <a href="/" class="footer-return-button">Return</a>
+</footer>
