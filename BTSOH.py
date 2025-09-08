@@ -162,7 +162,7 @@ def Opening_Soon():
 
 @app.route('/Cherry_Bud_Shop')
 def Cherry_Bud_Shop():
-    return render_template('Shop.html')
+    return render_template('shop.html')
 
 # ---------- Expenses ----------
 @app.route('/submit', methods=['POST'])
